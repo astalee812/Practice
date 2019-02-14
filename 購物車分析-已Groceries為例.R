@@ -38,3 +38,13 @@ itemFrequencyPlot(Groceries,topN = 10,horiz = T,
 itemFrequencyPlot(Groceries,support = 0.1,
                   main = "Item Frequency with Support = 0.1",ylab = "Relative Frequency")
 
+install.packages("arulesViz")
+library(arulesViz)
+
+
+#support=「規則」在資料內具有普遍性，也就是這些 A 跟 B 同時出現的機率多少。
+#confidence=「規則」要有一定的信心水準，也就是當購買 A 狀態下，也會購買 B 的條件機率。
+#rhs 代表買左邊也會買右邊的意思
+#lift=1.5 > 1，表示了這個規則相當具有正相關
+rule<-apriori(Groceries,parameter = list(support=0.005,confidence=0.5))
+inspect(rule[1:5])
