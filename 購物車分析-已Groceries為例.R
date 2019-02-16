@@ -85,5 +85,19 @@ plot(rule2,colors=c("red","green"),engine="htmlwidget",
 rule22<-sort(rule2,by="support")
 plot(rule22[1:20],method = "graph")
 
+inspect(rule2[1:10])
 
+#同一個水平軸上和同一個垂直軸上皆是同一項產品
+plot(rule2,method="matrix",shading="lift",colors=c("red","green"),engine="htmlwidget")
 
+#依照lift來排序看前5名
+inspect(sort(rule2, by = "lift")[1:5])
+
+#篩選會有可能購買蔬菜的規則，rhs=vegetables
+vegie.rules <- subset(rule2, subset = rhs %pin% "vegetables")
+inspect(sort(vegie.rules,by="lift"))
+
+#做出以蔬菜為中心的互動式圖表
+#泡泡大小：support: A被購買的機率 (A的基礎機率)
+#泡泡顏色：lift: A被購買時，B被購買的機率增加的倍數 (與B的基礎機率相比)
+plot(vegie.rules,method="graph",engine="htmlwidget",itemCol="cyan") 
