@@ -20,5 +20,20 @@ colSums(is.na(full))
 str(full)
 summary(full)
 
+#設定factor
+full$Survived=as.factor(full$Survived)
+full$Sex=as.factor(full$Sex)
+full$Pclass=as.factor(full$Pclass)
+full$Embarked=as.factor(full$Embarked)
+
+str(full)
+
+install.packages("installr")
+require(installr)
+updateR()
+
+#畫圖時間
 install.packages("ggplot2")
 library(ggplot2)
+
+ggplot(Train,aes(x=Sex,fill=Survived))+geom_bar()
