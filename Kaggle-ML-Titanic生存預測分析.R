@@ -58,4 +58,18 @@ ggplot(full[1:LT,],aes(x=Age,fill=Survived))+geom_histogram(binwidth =3)
 full$Fare[is.na(full$Fare)] <- mean(full$Fare,na.rm=T)
 ggplot(data = full[1:LT,],aes(x=Fare,fill=Survived))+geom_histogram(binwidth =20, position="fill")
 
+#轉換一下圖形好了
+ggplot(full,aes(x=Age,fill=Sex))+geom_histogram(binwidth=10,position="dodge")+facet_grid(.~Survived)
 
+#開始做預測囉
+install.packages("rpart")
+install.packages("rpart.plot")
+library(rpart)
+library(rpart.plot)
+gender<-read.csv("C:/Users/ASUS/Desktop/titanic/gender_submission.csv")
+
+#畫個決策樹
+model<-rpart(Survived~Age+Sex+Embarked,data=full,method = "class", control = rpart.control(cp = 0))
+rpart.plot(model, type = 2, box.palette = c("red", "green"), fallen.leaves = TRUE)
+
+#
