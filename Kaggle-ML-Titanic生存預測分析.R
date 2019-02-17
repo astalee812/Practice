@@ -27,13 +27,17 @@ full$Pclass=as.factor(full$Pclass)
 full$Embarked=as.factor(full$Embarked)
 
 str(full)
-
-install.packages("installr")
-require(installr)
-updateR()
+update.packages()
+install.packages("devtools")
+devtools::install_github("tidyverse/ggplot2")
 
 #畫圖時間
 install.packages("ggplot2")
 library(ggplot2)
 
+#看看性別跟生存與否之間有沒有關係
 ggplot(Train,aes(x=Sex,fill=Survived))+geom_bar()
+
+
+
+
