@@ -35,9 +35,14 @@ devtools::install_github("tidyverse/ggplot2")
 install.packages("ggplot2")
 library(ggplot2)
 
-#看看性別跟生存與否之間有沒有關係
-ggplot(Train,aes(x=Sex,fill=Survived))+geom_bar()
+#看看性別跟生存與否之間有沒有關係，看來男人死光光
+LT=dim(Train)[1]
+ggplot(data = full[1:LT,],aes(x=Sex,fill=Survived))+geom_bar()
 
+#看看Embarked跟生存與否之間有沒有關係
+ggplot(data = full[1:LT,],aes(x=Embarked,fill=Survived))+geom_bar(position="fill")+ylab("Frequency")
 
+#看看Pclss跟生存與否之間有沒有關係
+ggplot(data = full[1:LT,],aes(x=Pclass,fill=Survived))+geom_bar(position="fill")+ylab("Frequency")
 
 
