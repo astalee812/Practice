@@ -79,3 +79,8 @@ train1<-train_im[ind,]
 train2<-train_im[-ind,]
 model2 <- glm(Survived ~.,family=binomial(link='logit'),data=train1)
 summary(model2)
+
+
+pred.train <- predict(model2,train2)
+pred.train <- ifelse(pred.train > 0.5,1,0)
+mean(pred.train==train2$Survived)
