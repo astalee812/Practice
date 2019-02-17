@@ -72,4 +72,10 @@ gender<-read.csv("C:/Users/ASUS/Desktop/titanic/gender_submission.csv")
 model<-rpart(Survived~Age+Sex+Embarked,data=full,method = "class", control = rpart.control(cp = 0))
 rpart.plot(model, type = 2, box.palette = c("red", "green"), fallen.leaves = TRUE)
 
-#
+#做個羅傑斯回歸吧
+train_im<- full[1:LT,c("Survived","Pclass","Sex","Age","Fare","SibSp","Parch")]
+ind<-sample(1:dim(train_im)[1],500)
+train1<-train_im[ind,]
+train2<-train_im[-ind,]
+model2 <- glm(Survived ~.,family=binomial(link='logit'),data=train1)
+summary(model2)
