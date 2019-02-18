@@ -95,9 +95,10 @@ rf_model<-randomForest(factor(Survived) ~ Pclass+ Sex + Fare + Embarked, data = 
 print(rf_model)
 plot(rf_model)
 varImpPlot(rf_model)
+#做出預測!!!(我快哭了)
 Prediction<-predict(rf_model,newdata = full_test)
 solution <- data.frame(Survived = Prediction, PassengerID = full_test$PassengerId)
-
+write.csv(solution, file = 'rf_model_sol.csv', row.names = F)
 
 
 
