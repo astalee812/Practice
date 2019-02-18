@@ -69,8 +69,34 @@ library(rpart.plot)
 gender<-read.csv("C:/Users/ASUS/Desktop/titanic/gender_submission.csv")
 
 #畫個決策樹
-model<-rpart(Survived~Age+Sex+Embarked,data=full,method = "class", control = rpart.control(cp = 0))
-rpart.plot(model, type = 2, box.palette = c("red", "green"), fallen.leaves = TRUE)
+full_train<-full[1:891,]
+full_test<-full[891:1309,]
+model<-rpart(Survived~Age+Sex+Pclass+Embarked,data=full_train,method = "class")
+rpart.plot(model, type = 2, box.palette = c("red", "green"))
+
+
+
+#預測
+install.packages("caret")
+library(caret)
+Predict_train<-predict(model,data=full_train,type="class")
+table(Predict_train)
+print(Predict_train)
+#混淆矩陣
+full_train$Survived<-as.factor(full_train$Survived)
+install.packages("e1071")
+library(e1071)
+confusionMatrix(Predict_train,full_train$Survived)
+#隨機森林
+install.packages("randomForest")
+library(randomForest)
+set.seed(123)
+rf_model<-randomForest(factor(Survived) ~ Pclass+ Sex + Fare + Embarked, data = full_train)
+print(rf_model)
+
+full_test<-as.factor(full_test)
+Prediction<-predict(rf_model,full_test)
+
 
 #做個羅傑斯回歸吧
 train_im<- full[1:LT,c("Survived","Pclass","Sex","Age","Fare","SibSp","Parch")]
@@ -79,8 +105,3 @@ train1<-train_im[ind,]
 train2<-train_im[-ind,]
 model2 <- glm(Survived ~.,family=binomial(link='logit'),data=train1)
 summary(model2)
-
-
-pred.train <- predict(model2,train2)
-pred.train <- ifelse(pred.train > 0.5,1,0)
-mean(pred.train==train2$Survived)
