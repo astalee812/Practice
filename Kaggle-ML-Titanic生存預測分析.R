@@ -91,17 +91,13 @@ confusionMatrix(Predict_train,full_train$Survived)
 install.packages("randomForest")
 library(randomForest)
 set.seed(123)
-rf_model<-randomForest(factor(Survived) ~ Pclass+ Sex + Fare + Embarked, data = full_train)
+rf_model<-randomForest(factor(Survived) ~ Pclass+ Sex + Fare + Embarked, data = full_train,importance=TRUE,ntree=200)
 print(rf_model)
+plot(rf_model)
+varImpPlot(rf_model)
+Prediction<-predict(rf_model,newdata = full_test)
+solution <- data.frame(Survived = Prediction, PassengerID = full_test$PassengerId)
 
-full_test<-as.factor(full_test)
-Prediction<-predict(rf_model,full_test)
 
 
-#做個羅傑斯回歸吧
-train_im<- full[1:LT,c("Survived","Pclass","Sex","Age","Fare","SibSp","Parch")]
-ind<-sample(1:dim(train_im)[1],500)
-train1<-train_im[ind,]
-train2<-train_im[-ind,]
-model2 <- glm(Survived ~.,family=binomial(link='logit'),data=train1)
-summary(model2)
+
