@@ -53,6 +53,9 @@ salesdata3$shop_id<-as.factor(salesdata3$shop_id)
 #來看看有幾間分店，有60家分店阿!
 unique(salesdata3$shop_id)
 
+#那看看哪家分店比較夯?是第31號店阿!!
+sort(table(salesdata3$shop_id))
+
 
 
 
