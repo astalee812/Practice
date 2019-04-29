@@ -74,3 +74,43 @@ ggplot( data = SalesTablePrice) +
        x = 'Client',
        y = 'Unit_Price in total',
        fill = 'Client_Name') + theme_bw()
+
+#不同產品的銷售模式，用boxplot看個產品銷售的分配
+#H的單價是最高的，可以它的變異狀況也很高
+ggplot( data = SalesTableNew) + 
+  geom_boxplot(aes( x = Product_Name,
+                    y = Sales,
+                    colour = Product_Name)) +
+  labs( x = 'Product',
+        title = 'Sales Distribution by Product') + theme_bw()
+
+#過去一個用中這些產品的總銷售量狀況
+#銷售總量再H商品上是最高的
+SalesTableAmount <- SalesTableNew %>%
+  group_by( Product_Name) %>%
+  summarise( Amount_Sum = sum(Sales_Amount)) %>%
+  arrange(desc(Amount_Sum))
+
+ggplot( data = SalesTableAmount) + 
+  geom_bar( aes( x = Product_Name,
+                 y = Amount_Sum,
+                 fill = Product_Name),
+            stat = 'identity') +
+  
+  scale_x_discrete(limits = SalesTableAmount$Client_Name) +
+  
+  labs(title = 'Total Sales_Amount by Product',
+       x = 'Product',
+       y = 'Sales_Amount in total',
+       fill = 'Product_Name') + theme_bw()
+
+#合併在一起起來看，知道每個顧客都主要購買什麼產品
+SalesTableClient <- SalesTableNew %>%
+  group_by(Client_Name, Product_Name) %>%
+  summarise( Sales = sum(Sales))
+
+ggplot( data = SalesTableClient) +
+  geom_bar( aes( x = Product_Name,
+                 y = Sales),
+            stat = 'identity') +
+  facet_wrap( ~ Client_Name)
