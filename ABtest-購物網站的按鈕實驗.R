@@ -25,3 +25,29 @@ head(test.data)
 
 #變數轉換:日期格式調整
 test.data$date<-as.Date(test.data$date,format = "%Y/%m/%d")
+test.data$device<-as.factor(test.data$device)
+test.data$test<-as.factor(test.data$test)
+test.data$gender<-as.factor(test.data$gender)
+test.data$service<-as.factor(test.data$service)
+test.data$country<-as.factor(test.data$country)
+head(test.data)
+summary(test.data)
+
+#實驗組與對照組的差異，計算購物次數的平均值
+test.data%>%
+  group_by(test) %>%
+  summarise(mean_purchase_amount=mean(purchase_amount))
+
+#設備之間的差異
+test.data %>%
+  group_by(device) %>%
+  summarise(mean_purchase_amount=mean(purchase_amount))
+
+#性別之間的差異
+test.data %>%
+  group_by(gender) %>%
+  summarise(mean_parchase_amount=mean(purchase_amount))
+
+#服務類型的差異
+
+
