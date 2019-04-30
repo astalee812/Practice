@@ -37,17 +37,78 @@ summary(test.data)
 test.data%>%
   group_by(test) %>%
   summarise(mean_purchase_amount=mean(purchase_amount))
-
 #設備之間的差異
 test.data %>%
   group_by(device) %>%
   summarise(mean_purchase_amount=mean(purchase_amount))
-
 #性別之間的差異
 test.data %>%
   group_by(gender) %>%
   summarise(mean_parchase_amount=mean(purchase_amount))
-
 #服務類型的差異
+test.data %>%
+  group_by(service) %>%
+  summarise(mean_parchase_amount=mean(purchase_amount))
+#國家的差異
+test.data %>%
+  group_by(country) %>%
+  summarise(mean_purchase_amount=mean(purchase_amount))
 
 
+#檢驗實驗組與對照組是否有不同的結果=使用獨立樣本t檢定
+t.test(test.data[test.data$test==1,]$purchase_amount,
+       test.data[test.data$test==0,]$purchase_amount,
+       alternative = "greater")
+
+#影響購物金額的原因=使用單因子變異數分析(ANOVA)
+#目前有的因子:test,country,device,gender,service
+aov.model<-aov(
+  purchase_amount~test+country+device+gender+service,
+  test.data
+)
+summary(aov.model)
+
+#交互作用影響:test跟國家之間有交互作用
+interaction.model<-aov(
+  purchase_amount~test*country+test*device+test*service,
+  test.data)
+summary(interaction.model)
+
+#事後檢定=Tukey事後檢定
+#用來了解平均購買金額差異為多少
+TukeyHSD(interaction.model, "test")
+TukeyHSD(interaction.model, "country")
+plot(TukeyHSD(interaction.model, "country"))
+
+#結果呈現，開始將結果做視覺化
+#每日銷售差異
+daily.purchase <- test.data %>%
+  group_by(date, test) %>%
+  summarise(purchase_amount = mean(purchase_amount))
+
+ggplot(daily.purchase, aes(x = date, y = purchase_amount, colour = test)) + 
+  geom_point() + geom_line() +
+  xlab("Date") + ylab("Purchase Amount") + ylim(c(30, 50)) +
+  ggtitle("Time Series Plot of Purchase Amount: Test versus Control") +
+  theme_bw()
+
+#分兩族群來看差異
+ggplot(test.data, aes(purchase_amount, fill = test, colour = test)) +
+  geom_density(alpha = 0.3) +
+  xlab("Purchase Amount") + ylab("Density") +
+  ggtitle("Density Plot of Purchase Amount: Test versus Control") +
+  theme_bw()
+
+#哪些因素會影響使用者的消費金額
+ggplot(test.data, aes(x = country, y = purchase_amount)) +
+  geom_boxplot() +
+  xlab("Country") + ylab("Purchase Amount") +
+  ggtitle("Boxplot of Purchase Amount by Country") +
+  theme_bw()
+
+#哪些因素存在交互作用
+ggplot(test.data, aes(x = country, y = purchase_amount, colour = test)) +
+  geom_boxplot() +
+  xlab("Country") + ylab("Purchase Amount") +
+  ggtitle("Boxplot of Purchase Amount by Country: Test versus Control") +
+  theme_bw()
