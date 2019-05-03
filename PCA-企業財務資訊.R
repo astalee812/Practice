@@ -63,3 +63,34 @@ ggplot(melt(nspca.model$rotation[, 1:8]), aes(Var2, Var1)) +
 #主成份 1 重點為「股東權益獲利與成長能力」
 #主成份 2 重點為「資產獲利能力」
 #主成份 3 重點為「毛利與週轉率」
+
+
+#個別公司分析
+nspca.score <- data.frame(nspca.model$x)
+row.names(nspca.score) <- financial.data$comp_id
+
+plot_ly(x = nspca.score[, 1],
+  y = financial.data$roe,
+  text = financial.data$comp_id,
+  type = "scatter",
+  mode = "markers"
+) %>% layout(
+  title = "ROE v.s. PC 1 Score: Scatter Plot",
+  xaxis = list(title = 'Principal Component 1'),
+  yaxis = list(title = 'Return on Equity'),
+  margin = list(r = 30, t = 50, b = 70, l = 50)
+)
+
+#主成分2跟主成分3
+plot_ly(
+  x = nspca.score[, 2],
+  y = nspca.score[, 3],
+  text = financial.data$comp_id,
+  type = "scatter",
+  mode = "markers"
+) %>% layout(
+  title = "PC 2 v.s. PC 3 Score: Scatter Plot",
+  xaxis = list(title = 'Principal Component 2'),
+  yaxis = list(title = 'Principal Component 3'),
+  margin = list(r = 30, t = 50, b = 70, l = 50)
+)
