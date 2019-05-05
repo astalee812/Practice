@@ -148,13 +148,20 @@ ggplot( data = GameTableResult) +
   geom_bar( aes( x = Telecom)) + 
   facet_wrap( ~ Cluster)
 
-#使用ggfortify來做分群結果的視覺化，也會納入主成分分析
+#使用ggfortify來做分群結果的視覺化，也會納入主成分分析，並有解釋了90%的變異
 library(ggfortify)
 set.seed(500)
 autoplot(kmeans(GameTable[,1:6], 4), data  = GameTable)
+#針對不同群體提出以下活動:
+#針對群體一群體一多為新手及學生，較沒有明顯的購買行為，可以透過下午時段限定優惠、學生限定優惠、新手加值優惠等方案，針對群體一進行促銷。
+#針對群體三群體三整體的上線時間較長，且購買以抽卡為主，建議提供總上線時間的獎勵，提高抽中稀有卡片的機率，以促進群體三的購買行為。
+#針對群體四群體四的總購買金額最高、上線時間較特別，可以針對該時段設計與其他購買項目的聯合限定促銷，或是獎勵長期玩家的活動，增加群體四的購買金額。
+#針對全部群體由於各個群體的購買項目皆非常集中，可以嘗試各項目間的聯合促銷活動，擴展其他購買項目的銷售機會
+
 
 ggplot( data = ClusterResultForPlot) + 
   geom_boxplot( aes( x = Continuous_Variable,
                      y = Normalized_Value),
                 size = 0.7) +
   facet_wrap( ~ Cluster)
+
