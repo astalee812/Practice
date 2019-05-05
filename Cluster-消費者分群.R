@@ -121,7 +121,8 @@ ggplot( data = ClusterResultForPlot) +
                 size = 0.7) +
   facet_wrap( ~ Cluster)
 
-
+#處理一下類別變數，這邊是[1,0]範圍的數值，要將轉換過及未轉換的數值做合併
+#以方便之後想知道真實數值的狀況
 GameTableResult <-  GameLog %>%
   group_by(User_Id) %>%
   summarise(
@@ -138,6 +139,7 @@ GameTableResult <-  GameLog %>%
 
 colnames(GameTableResult)[ncol(GameTableResult)] <- 'Cluster'
 
+#畫圖了解玩家身分與電信公司的狀況
 ggplot( data = GameTableResult) +
   geom_bar( aes( x = Identity)) + 
   facet_wrap( ~ Cluster)
@@ -146,6 +148,7 @@ ggplot( data = GameTableResult) +
   geom_bar( aes( x = Telecom)) + 
   facet_wrap( ~ Cluster)
 
+#使用ggfortify來做分群結果的視覺化，也會納入主成分分析
 library(ggfortify)
 set.seed(500)
 autoplot(kmeans(GameTable[,1:6], 4), data  = GameTable)
